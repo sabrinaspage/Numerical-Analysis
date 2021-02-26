@@ -1,6 +1,7 @@
 import math
 import mpmath
 import numpy as np
+import pylab
 import pandas as pd
 from matplotlib import pyplot as plt
 import matplotlib.ticker as mtick
@@ -14,7 +15,7 @@ def h(k):
 
 def x_axis():
     values = []
-    for i in range(17, 0, -1):
+    for i in range(0, 17):
         values.append(h(i))
     return values
 
@@ -37,14 +38,21 @@ df['Finite-Diff Approx.'] = df['Finite-Diff Approx.'].map(lambda x: '%2.16f' % x
 print(df)
 print(x_axis())
 
-plt.title('Difference Functions')
+print("Lowest level in magnitude of error (h): " + str(min(finite_errs)))
+print("Machine epsilon has a value of: " + str(np.finfo(float).eps))
+print("The approximate value of h, h≈sqrt(emach), in exercise 1.3, is: " + str(math.sqrt(np.finfo(float).eps)))
 
-plt.plot(x_axis(), finite_errs, label='Finite-Difference Errors at x=1')
+print("The lowest value of h in finite-difference approximation and h in example 1.3, h≈sqrt(emach), is that they both happen at 10^-8")
 
-plt.ticklabel_format(axis='both', style='sci', scilimits=(4, 4))
+fig = plt.figure()
+ax = fig.add_subplot()
 
-plt.xlabel("Values of i = [0,17] on h^(i)")
-plt.ylabel("Magnitude of Error")
+line, = ax.plot(x_axis(), finite_errs, color='blue', lw=2)
 
-plt.legend()
-plt.show()
+ax.set_yscale('log')
+ax.set_xscale('log')
+ax.set_title("Finite-Difference Approximate Value Errors")
+ax.set_xlabel("h^i where i = [0, 16]")
+ax.set_ylabel("Magnitude of Error")
+
+pylab.show()

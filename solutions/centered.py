@@ -1,5 +1,6 @@
 import math
 import mpmath
+import pylab
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -15,7 +16,7 @@ def h(k):
 
 def x_axis():
     values = []
-    for i in range(17, 0, -1):
+    for i in range(0, 17):
         values.append(h(i))
     return values
 
@@ -32,20 +33,28 @@ def centered(x):
 
 centered_vals, centered_errs = centered(const_x)
 
-df = pd.DataFrame({"Centered-Diff Approx.": centered_vals, "Centered-Diff Errors": centered_errs})
-df['Centered-Diff Approx.'] = df['Centered-Diff Approx.'].map(lambda x: '%2.16f' % x)
+df = pd.DataFrame({"Centered-Diff Approx.": centered_vals,
+                   "Centered-Diff Errors": centered_errs})
+df['Centered-Diff Approx.'] = df['Centered-Diff Approx.'].map(
+    lambda x: '%2.16f' % x)
 
 print(df)
-print(x_axis())
+print("Lowest level in magnitude of error (h): " + str(min(centered_errs)))
+print("Machine epsilon has a value of: " + str(np.finfo(float).eps))
+print("The approximate value of h, h≈sqrt(emach), in exercise 1.3, is: " +
+      str(math.sqrt(np.finfo(float).eps)))
 
-plt.title('Difference Functions')
+print("When h is at 10^-7, the minimum error is lower than the finite error, occurring at 10^12." +
+      " 10^7 is slightly bigger than the value of h.")
 
-plt.plot(x_axis(), centered_errs, label='Centered Difference Errors at x=1')
+fig = plt.figure()
+ax = fig.add_subplot()
 
-plt.ticklabel_format(axis='both', style='sci', scilimits=(4, 4))
+line, = ax.plot(x_axis(), centered_errs, color='blue', lw=2)
+ax.set_yscale('log')
+ax.set_xscale('log')
+ax.set_title("Centered-Difference Approximate Value Errors")
+ax.set_xlabel("h^i where i = [0, 16]")
+ax.set_ylabel("Magnitude of Error")
 
-plt.xlabel("Values of i = [0,17] on h^(i)")
-plt.ylabel("Magnitude of Error")
-
-plt.legend()
-plt.show()
+pylab.show()
