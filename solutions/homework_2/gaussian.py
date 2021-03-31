@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.linalg import lu
-import solutions.homework_2.operations as operations
+import operations
 from math import sqrt
 
 """

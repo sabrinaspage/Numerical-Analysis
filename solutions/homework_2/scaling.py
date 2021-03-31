@@ -1,7 +1,7 @@
 import scipy
 import numpy as np
 import random
-import solutions.homework_2.operations as operations
+import operations
 
 
 def main():

@@ -1,11 +1,19 @@
 import numpy as np
 from scipy.linalg import lu
-import solutions.homework_2.operations as operations
+import random
+import operations
 
 # Condition function is built with the methods below
 
+
+def generate_c():
+    return np.array([random.choice([1, -1]),
+                     random.choice([1, -1]),
+                     random.choice([1, -1])])
+
+
 def main():
-    vector_c = np.array([1, 1, 1])
+    vector_c = generate_c()
 
     # A1 Matrix
 
@@ -54,7 +62,6 @@ diagonal elements, and U upper triangle for A1 using Scipy \n")
     p2, l2, u2 = lu(A2)
 
     print("\n/////////////////////////////////////////////////////////////////////")
-    print("\n/////////////////////////////////////////////////////////////////////")
 
     print("\nPermutation matrix, lower triangle with unit diagonal \
 diagonal elements, and U upper triangle for A2 using Scipy \n")
@@ -85,6 +92,23 @@ diagonal elements, and U upper triangle for A2 using Scipy \n")
     print("\nA2 Estimate Condition number")
     A2_cond_num = A2_norm * A2_inverse_norm
     print(A2_cond_num)
+
+    print("\n//////////////////////////////////////////////////////////////")
+
+    # The condition number of the first matrix is closer to singularity
+    # The condition number of the second matrix is closer to 1
+
+    print("\nA1 Actual Condition number")
+    real_cond_A1 = np.linalg.cond(A1)
+    print(real_cond_A1)
+
+    print("\nA2 Actual Condition number")
+    real_cond_A2 = np.linalg.cond(A2)
+    print(real_cond_A2)
+
+    # It seems as though my estimates were far from the real answer.
+    # The condition number for A1 is closer to 1, while matrix 2 is
+    # far from being nonsingular.
 
 
 if __name__ == '__main__':
