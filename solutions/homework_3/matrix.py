@@ -1,5 +1,4 @@
 import numpy as np
-import linalg
 
 A = np.matrix([[-1, 1, 0, 0, 0, 0],
 [0, 0, 0, -1, 1, 0],
