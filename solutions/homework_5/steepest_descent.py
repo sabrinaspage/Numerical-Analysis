@@ -1,6 +1,5 @@
 from sympy import *
 from matplotlib.pyplot import *
-from matplotlib.transforms import IdentityTransform, blended_transform_factory
 
 epsilon = 10**-3
 x1 = Symbol('x1')
