@@ -1,5 +1,6 @@
 from sympy import *
 from matplotlib.pyplot import *
+from matplotlib import pyplot as plt
 
 epsilon = 10**-3
 x1 = Symbol('x1')
@@ -29,6 +30,7 @@ def get_critical_points(function):
     return critical_points
 
 print("Critical points of the function: ", get_critical_points(function))
+print("Given that there is only one local point, we can call this the global max/min")
 
 # in order to determine that this point is the global minimum
 # check for the derivative of the gradient, which verifies
@@ -71,7 +73,6 @@ def second_partial_derivative_test(derivatives):
         else:
             return "Critical point is a local minimum point."
 
-print("Given that there is only one local point, we can call this the global max/min")
 print(second_partial_derivative_test(derivs))
 
 # given that we only retrieve one critical point, we can assume the
@@ -88,7 +89,7 @@ print(second_partial_derivative_test(derivs))
 # approaches some constant
 
 # if we start at 0, 0
-x = (0, 0)
+x = [0, 0]
 
 def steepest_descent(function, starting_point, learning_rate=0.1):
     gradient = get_first_partial_derivatives(function)
@@ -98,7 +99,6 @@ def steepest_descent(function, starting_point, learning_rate=0.1):
     count = 0
 
     to_minimized = []
-    to_convergence = []
     while func_with_start >= epsilon:
         to_minimized.append(to_change)
         func_with_start = function.subs(x1, to_change[0]).subs(x2, to_change[1])
@@ -108,10 +108,9 @@ def steepest_descent(function, starting_point, learning_rate=0.1):
         minimize_x1 = to_change[0] - learning_rate*first_partial_with_start
         minimize_x2 = to_change[1] - learning_rate*second_partial_with_start
         to_change = (minimize_x1, minimize_x2)
-        to_convergence.append(func_with_start)
         count += 1
 
-    return to_minimized, to_convergence, f"It takes {count} iterations to converge to the critical point of {function} with a learning rate of {learning_rate}, starting at {starting_point}"
+    return to_change, to_minimized, f"It takes {count} iterations to converge to the critical point of {function} with a learning rate of {learning_rate}, starting at {starting_point}"
 
 # sources:
 # page 276 of textbook
@@ -119,30 +118,28 @@ def steepest_descent(function, starting_point, learning_rate=0.1):
 
 # plot the points on a graph
 
-def plot_steepest(starting_point):
-    path, convergence, description = steepest_descent(function, starting_point)
-    
+def plot_path(starting_point, learning_rate=0.001):
+    path, convergence, description = steepest_descent(function, starting_point, learning_rate)
+    x = np.linspace(-4, 4, 100)
+    y = np.linspace(-4, 4, 100)
+
+    X, Y = np.meshgrid(x, y)
+    Z = X**2 + Y**2
+    plt.contour(X, Y, Z, 10)
+
     x1_list = []
     x2_list = []
-    for x in path:
+    for x in convergence:
         x1_list.append(x[0])
         x2_list.append(x[1])
 
-    fig, (path_graph, convergence_graph) = subplots(1, 2)
-    path_graph.plot(x1_list, label = "Changes in x1")
-    path_graph.plot(x2_list, label = "Changes in x2")
-    path_graph.set_title('Changes in x1, x2 Until Minimized for f(x1, x2)')
-    path_graph.set(xlabel='iterations', ylabel='values of x')
+    plt.plot(x1_list, x2_list, '-')
+    plt.axis('square')
+    plt.title(description)
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.show()
 
-    convergence_graph.plot(convergence)
-    convergence_graph.set_title('Plotting to Convergence of f(x1, x2)')
-    convergence_graph.set(xlabel='iterations', ylabel='values of f(x1, x2)')
-
-    fig.suptitle(description)
-    
-    path_graph.legend()
-    show()
-
-plot_steepest((2,3))
-plot_steepest((2,1))
-plot_steepest((1,1))
+plot_path([2,3])
+plot_path([2,1])
+plot_path([1,1])
